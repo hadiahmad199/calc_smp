@@ -1,8 +1,9 @@
-import mysql from 'mysql2'
-import express from 'express'
-import cors from 'cors'
+const mysql = require('mysql2');
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const path = require('path'); // هذه كانت تسبب الخطأ مع الـ import
 
-import dotenv from 'dotenv'
 dotenv.config()
 
 
