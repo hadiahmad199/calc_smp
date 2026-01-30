@@ -66,6 +66,9 @@ app.get("/api/users/:id", async (req, res) => {
     };
 });
 
+app.get('/', (req, res) => res.send('Server is Up!'));
+
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT,'0.0.0.0', () => {
     console.log(`Server is running on ${PORT} `);
