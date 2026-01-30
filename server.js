@@ -39,6 +39,10 @@ pool.getConnection()
 // Healthcheck + Home page (Railway)
 // ====================
 app.get("/", (req, res) => {
+  res.status(200).send("OK");
+});
+
+app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "main.html"));
 });
 
