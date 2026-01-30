@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 
-
+const path = require('path');
 
 
 
@@ -71,6 +71,21 @@ app.get("/api/users/:id", async (req, res) => {
 
 const PORT = process.env.PORT 
 
-app.listen(PORT,'0.0.0.0', () => {
-    console.log(`Server is running on ${PORT} `);
+
+
+// 1. جعل مجلد المشروع متاحاً للزوار (للصور والخطوط والتنسيقات)
+app.use(express.static(path.join(calcsmp)));
+
+// 2. إخبار السيرفر بفتح الملف الرئيسي عند الدخول للرابط
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'main.html')); // تأكد أن اسمه login.html أو index.html
 });
+
+// 3. تشغيل السيرفر
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+
+
