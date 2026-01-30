@@ -58,7 +58,7 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-app.post("https://calcsmp-production.up.railway.app/api/users", async (req, res) => {
+app.post("/api/users", async (req, res) => {
   const { username, email, password } = req.body;
   try {
     const [result] = await pool.query(
