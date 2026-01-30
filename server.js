@@ -65,6 +65,7 @@ app.post("/api/users", async (req, res) => {
       "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
       [username, email, password]
     );
+    console.log(req.body);
     res.status(201).json({ id: result.insertId });
   } catch (err) {
     res.status(500).json({ error: err.message });
