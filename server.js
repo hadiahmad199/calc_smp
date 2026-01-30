@@ -10,6 +10,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// 📁 خدمة ملفات HTML
+app.use(express.static(path.join(__dirname, "public")));
+
 // اتصال MySQL
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -28,9 +31,9 @@ pool.getConnection()
     console.error("Database connection failed:", err);
   });
 
-// Health check (Railway يحتاجه)
+// الصفحة الرئيسية (HTML)
 app.get("/", (req, res) => {
-  res.status(200).send("OK");
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // API
