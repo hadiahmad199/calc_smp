@@ -60,6 +60,10 @@ app.post("/api/users", async (req, res) => {
     }
 });
 
+app.get("/", (req, res) => {
+  res.send("OK");
+});
+
 // 3. تشغيل السيرفر مع تحديد العنوان 0.0.0.0
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
