@@ -18,6 +18,15 @@ const pool = mysql.createPool({
     port: process.env.MYSQL_PORT || 3306
 }).promise()
 
+pool.getConnection()
+  .then(conn => {
+    console.log("Connected to MySQL successfully!");
+    conn.release();
+  })
+  .catch(err => {
+    console.error("Database connection failed:", err);
+  });
+
 
 async function getusers() {
     const [rows] = await pool.query("SELECT * FROM users");
