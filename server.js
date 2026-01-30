@@ -28,17 +28,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// جعل المجلد الحالي متاحاً للملفات الثابتة (CSS, JS, Images)
-// ملاحظة: تأكد أن ملفاتك ليست داخل مجلد فرعي، إذا كانت كذلك غير السطر لـ app.use(express.static(path.join(__dirname, 'اسم_المجلد')));
+// 1. إتاحة الملفات الثابتة (مهم جداً لنجاح فحص الجاهزية)
 app.use(express.static(__dirname));
 
-// المسار الرئيسي لفتح الموقع (هذا ما سيراه Railway ويدرك أن السيرفر يعمل)
+// 2. المسار الرئيسي (يجب أن يكون مساراً واحداً فقط)
 app.get('/', (req, res) => {
-    // تأكد أن ملف main.html موجود في المجلد الرئيسي على GitHub
+    // سيقوم السيرفر بإرسال ملف HTML الحقيقي بدلاً من مجرد نص
     res.sendFile(path.join(__dirname, 'main.html'));
 });
 
-// مسار جلب المستخدمين
+// مسارات الـ API
 app.get("/api/users", async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM users");
@@ -48,7 +47,6 @@ app.get("/api/users", async (req, res) => {
     }
 });
 
-// مسار إضافة مستخدم جديد
 app.post("/api/users", async (req, res) => {
     const { username, email, password } = req.body;
     try {
@@ -62,7 +60,7 @@ app.post("/api/users", async (req, res) => {
     }
 });
 
-// تشغيل السيرفر على 0.0.0.0 للسماح لـ Railway بالوصول إليه
+// 3. تشغيل السيرفر مع تحديد العنوان 0.0.0.0
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
