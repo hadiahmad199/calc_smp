@@ -10,10 +10,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 📁 خدمة ملفات HTML
-app.use(express.static(path.join(__dirname, "public")));
+// ====================
+// Static files (HTML, CSS, images)
+// ====================
+app.use(express.static(__dirname));
 
-// اتصال MySQL
+// ====================
+// MySQL connection
+// ====================
 const pool = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
@@ -31,12 +35,16 @@ pool.getConnection()
     console.error("Database connection failed:", err);
   });
 
-// الصفحة الرئيسية (HTML)
+// ====================
+// Healthcheck + Home page (Railway)
+// ====================
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(__dirname, "main.html"));
 });
 
-// API
+// ====================
+// API routes
+// ====================
 app.get("/api/users", async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM users");
@@ -59,7 +67,9 @@ app.post("/api/users", async (req, res) => {
   }
 });
 
-// تشغيل السيرفر
+// ====================
+// Start server
+// ====================
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Server running on port", PORT);
