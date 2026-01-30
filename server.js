@@ -50,6 +50,13 @@ app.post("/api/users", async (req, res) => {
     res.status(201).send({ id: result.insertId, username, email });
 });
 
+// هذا السطر يضمن استجابة السيرفر لـ Railway
+app.get('/', (req, res) => {
+    res.send('Server is alive and healthy!');
+});
+
+
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0',() => {
     console.log(`Server is running on port ${PORT}`);
