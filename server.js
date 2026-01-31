@@ -15,11 +15,11 @@ app.use(express.static(__dirname));
 
 // MySQL pool (الصحيح)
 const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
+  host: process.env.MYSQLDATABASE,
+  user: process.env.MYSQLHOST,
   password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT,
+  database: process.env.MYSQLPORT,
+  port: process.env.MYSQLUSER,
 }).promise();
 
 // test DB
