@@ -18,13 +18,9 @@ app.use(express.static(__dirname));
 // ====================
 // MySQL connection
 // ====================
-const pool = mysql.createPool({
-  host: process.env.MYSQLHOST,
-  user: process.env.MYSQLUSER,
-  password: process.env.MYSQLPASSWORD,
-  database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT,
-}).promise();
+const myldb = `mysql://${process.env.MYSQLHOST}:${process.env.MYSQLUSER}@${process.env.MYSQLPASSWORD}:${process.env.MYSQLDATABASE}/${process.env.MYSQLPORT}`;
+
+const pool = mysql.createPool(myldb);
 
 pool.getConnection()
   .then(conn => {
