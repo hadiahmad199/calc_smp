@@ -10,65 +10,51 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ====================
-// Static files (HTML, CSS, images)
-// ====================
+// static files
 app.use(express.static(__dirname));
 
-// ====================
-// MySQL connection
-// ====================
-const myldb = `mysql://${process.env.MYSQLHOST}:${process.env.MYSQLUSER}@${process.env.MYSQLPASSWORD}:${process.env.MYSQLDATABASE}/${process.env.MYSQLPORT}`;
+// MySQL pool (الصحيح)
+const pool = mysql.createPool({
+  host: process.env.MYSQLHOST,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+  port: process.env.MYSQLPORT,
+}).promise();
 
-const pool = mysql.createPool(myldb);
-
+// test DB
 pool.getConnection()
   .then(conn => {
-    console.log("Connected to MySQL successfully!");
+    console.log("✅ Connected to MySQL");
     conn.release();
   })
   .catch(err => {
-    console.error("Database connection failed:", err);
+    console.error("❌ DB Error:", err);
   });
 
-// ====================
-// Healthcheck + Home page (Railway)
-// ====================
+// routes
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
 
 app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "main.html"));
 });
 
-// ====================
-// API routes
-// ====================
-app.get("/api/users", async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM users");
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.post("/api/users", async (req, res) => {
-  const { username, email, password } = req.body;
   try {
+    const { username, email, password } = req.body;
     const [result] = await pool.query(
       "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
       [username, email, password]
     );
-    console.log(req.body);
-    res.status(201).json({ id: result.insertId });
+    res.json({ id: result.insertId });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// ====================
-// Start server
-// ====================
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on port", PORT);
+  console.log("🚀 Server running on", PORT);
 });
